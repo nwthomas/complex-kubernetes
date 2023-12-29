@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon",
-    "start": "node index.js"
+    "dev": "NODE_ENV=development nodemon",
+    "start": "NODE_ENV=production node index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "cors": "2.8.4",
     "express": "4.16.3",
     "nodemon": "1.18.3",
