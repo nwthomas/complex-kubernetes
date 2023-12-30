@@ -1,39 +1,41 @@
-import React, { Component } from "react";
-
-import axios from "axios";
+import React, { Component } from 'react';
+import axios from 'axios';
 
 class Fib extends Component {
   state = {
-    seenIndices: [],
+    seenIndexes: [],
     values: {},
-    index: "",
+    index: '',
   };
 
   componentDidMount() {
     this.fetchValues();
-    this.fetchIndices();
+    this.fetchIndexes();
   }
 
   async fetchValues() {
-    try {
-      const values = await axios.get("/api/values/current");
-      this.setState({ values: values.data });
-    } catch {
-      // Noop
-    }
+    const values = await axios.get('/api/values/current');
+    this.setState({ values: values.data });
   }
 
-  async fetchIndices() {
-    try {
-      const indices = await axios.get("/api/values/all");
-      this.setState({ seenIndices: indices.data });
-    } catch {
-      // Noop
-    }
+  async fetchIndexes() {
+    const seenIndexes = await axios.get('/api/values/all');
+    this.setState({
+      seenIndexes: seenIndexes.data,
+    });
   }
 
-  renderSeenIndices() {
-    return this.state.seenIndices.map(({ number }) => number).join(", ");
+  handleSubmit = async (event) => {
+    event.preventDefault();
+
+    await axios.post('/api/values', {
+      index: this.state.index,
+    });
+    this.setState({ index: '' });
+  };
+
+  renderSeenIndexes() {
+    return this.state.seenIndexes.map(({ number }) => number).join(', ');
   }
 
   renderValues() {
@@ -42,7 +44,7 @@ class Fib extends Component {
     for (let key in this.state.values) {
       entries.push(
         <div key={key}>
-          {`For index ${key} I calculated ${this.state.values[key]}`}
+          For index {key} I calculated {this.state.values[key]}
         </div>
       );
     }
@@ -50,34 +52,21 @@ class Fib extends Component {
     return entries;
   }
 
-  handleSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      await axios.post("/api/values", {
-        index: this.state.index,
-      });
-
-      this.setState({ index: "" });
-    } catch {
-      // Noop
-    }
-  };
-
-  handleChange(event) {
-    this.setState({ index: event.target.value });
-  }
-
   render() {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>Enter your index:</label>
-          <input onChange={this.handleChange} value={this.state.index} />
+          <input
+            value={this.state.index}
+            onChange={(event) => this.setState({ index: event.target.value })}
+          />
           <button>Submit</button>
         </form>
+
         <h3>Indexes I have seen:</h3>
-        {this.renderSeenIndices()}
+        {this.renderSeenIndexes()}
+
         <h3>Calculated Values:</h3>
         {this.renderValues()}
       </div>
