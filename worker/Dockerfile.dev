@@ -4,3 +4,8 @@ COPY ./package.json ./
 RUN npm install
 COPY . .
 CMD ["npm", "run", "dev"]
+
+#   postgres:
+#     image: "postgres:latest"
+#     environment:
+#       - POSTGRES_PASSWORD=postgres_password
