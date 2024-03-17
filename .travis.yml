@@ -14,3 +14,10 @@ after_success:
   - docker build -t nwthomas/multi-nginx ./nginx
   - docker build -t nwthomas/multi-server ./server
   - docker build -t nwthomas/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push nwthomas/multi-client
+  - docker push nwthomas/multi-nginx
+  - docker push nwthomas/multi-server
+  - docker push nwthomas/multi-worker
