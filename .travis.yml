@@ -1,0 +1,16 @@
+language: generic
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t nwthomas/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true nwthomas/react-test npm test
+
+after_success:
+  - docker build -t nwthomas/multi-client ./client
+  - docker build -t nwthomas/multi-nginx ./nginx
+  - docker build -t nwthomas/multi-server ./server
+  - docker build -t nwthomas/multi-worker ./worker
